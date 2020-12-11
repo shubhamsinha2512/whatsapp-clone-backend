@@ -3,10 +3,9 @@ const express = require('express');
 const socket = require('socket.io');
 
 var app = express();
+app.use(express.static('public'));
+
 var server = http.createServer(app);
 
-express.use(express.static('public'));
 
-
-
-server.listen(process.env.PORT || 8000);
+server.listen(process.env.PORT || 8000, ()=>{console.log("Server Started")});
