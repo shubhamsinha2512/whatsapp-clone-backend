@@ -2,7 +2,8 @@ const http = require('http');
 const express = require('express');
 const socket = require('socket.io');
 const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 
 //Routing
@@ -13,6 +14,7 @@ const AuthRouter = require('./routes/AuthRouter');
 const app = express();
 app.use(express.static('public'));
 app.use(express.json());
+app.use(cors());
 
 const server = http.createServer(app);
 const dbUri = 'mongodb+srv://shubham:shubham@chat-app-db.x4ran.mongodb.net/chatDb?retryWrites=true&w=majority';
