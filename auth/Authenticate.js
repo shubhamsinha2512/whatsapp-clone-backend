@@ -1,6 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const User = require('../models/User')
+const User = require('../models/UserSchema')
 
 passport.use(new LocalStrategy((username, password, done) => {
     User.find({mobile:username}, 'mobile name password').then((err, user)=>{

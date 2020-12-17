@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const http = require('http');
 const express = require('express');
 const socket = require('socket.io');
@@ -11,41 +13,26 @@ const HomeRouter = require('./routes/HomeRouter');
 const ChatRouter = require('./routes/ChatRouter');
 const AuthRouter = require('./routes/AuthRouter');
 
+//operations
+const opr = require('./operations')
+
 const app = express();
 app.use(express.static('public'));
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser("1234567890"));
 
 const server = http.createServer(app);
-const dbUri = 'mongodb+srv://shubham:shubham@chat-app-db.x4ran.mongodb.net/chatDb?retryWrites=true&w=majority';
 
-mongoose.connect(dbUri, {useNewUrlParser:true, useUnifiedTopology:true}, ()=>{
+mongoose.connect(process.env.DB_URI, {useNewUrlParser:true, useUnifiedTopology:true}, ()=>{
     console.log("Connected to DB");
 })
 
-// var db = mongoose.connection;
-
-// const User = require('./models/User');
-// const { ObjectId } = require('mongodb');
-
-// var newUser = new User({
-//     mobile:"8507284036",
-//     name:"Shubham",
-//     password:"abcdef",
-//     lastseen:'',
-//     order:'',
-//     chats:[{
-//         chatId:null,
-//         name:'Neha',
-//         lastMsg:''
-//     }]
-// });
-
-// newUser.save();
 
 app.use('/', HomeRouter);
-app.use('/chat', ChatRouter);
 app.use('/auth', AuthRouter);
+app.use('/chat', opr.authMiddleware, ChatRouter);
+
 
 
 server.listen(process.env.PORT || 8000, ()=>{console.log("Server Started")});

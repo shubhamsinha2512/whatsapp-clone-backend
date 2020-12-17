@@ -5,7 +5,7 @@ const MessageSchema = require('./MessageSchema');
 const ChatSchema = new Schema({
     user1:{type:mongoose.Types.ObjectId, required:[true, "add user 1"]},
     user2:{type:mongoose.Types.ObjectId, required:[true, "add user 2"]},
-    messages:[MessageSchema]
+    messages:[] //add MessageSchema later
 },{
     timestamps:true
 });
