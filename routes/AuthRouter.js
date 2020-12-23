@@ -9,7 +9,7 @@ const opr = require('../operations');
 var authResponse = {
     user: {},
     message: '',
-    loginStatus: false,
+    authStatus: false,
     jwtToken: null
 }
 
@@ -37,7 +37,7 @@ AuthRouter.route('/login')
                 authResponse = {
                     user: null,
                     message: 'No user Found',
-                    loginStatus: false,
+                    authStatus: false,
                     jwtToken: null
                 }
                 res.json(authResponse);
@@ -47,7 +47,7 @@ AuthRouter.route('/login')
                     authResponse = {
                         user: null,
                         message: 'Incorrect Password',
-                        loginStatus: false,
+                        authStatus: false,
                         jwtToken: null
                     }
                     res.json(authResponse);
@@ -61,7 +61,7 @@ AuthRouter.route('/login')
                             name: user.name
                         },
                         message: "Login Successful",
-                        loginStatus: true,
+                        authStatus: true,
                         jwtToken: jwtToken
                     }
                     res.json(authResponse); //data returned | do redirection at frontend                  
@@ -76,6 +76,11 @@ AuthRouter.route('/register')
 
         //check if req body is defined
         if (typeof req.body == 'undefined' || typeof req.body.userDetails == 'undefined' || typeof req.body.userDetails.mobile == 'undefined' || typeof req.body.userDetails.name == 'undefined' || typeof req.body.userDetails.password == 'undefined') {
+            res.send('Send userDetails:{mobile, name, password}');
+            return;
+        }
+
+        if (req.body.userDetails.mobile == '' || req.body.userDetails.name == '' || req.body.userDetails.password == '') {
             res.send('Send userDetails:{mobile, name, password}');
             return;
         }
@@ -98,13 +103,16 @@ AuthRouter.route('/register')
                     lastseen: null,
                     order: null,
                     chats: []
-                }).save((err, newUser) => {
+                }).save().then((newUser) => {
                     res.setHeader('Content-Type', 'application/json');
                     res.json({
+                        user:newUser,
                         "message": "Register Successful",
+                        authStatus:true,
                         jwtToken:opr.createJwtToken({mobile: newUser.mobile, name:newUser.name})
                     });
-                });
+                })
+                .catch(err => console.log(err));
             }
         })
     })
