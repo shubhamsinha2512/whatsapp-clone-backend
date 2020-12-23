@@ -14,7 +14,7 @@ exports.createJwtToken = (user) => { //returns token
         mobile: user.mobile,
         name: user.name
     }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn : '60s' //Change to 24h later
+        expiresIn : '7d' //Change to 24h later
     });
     return jwtToken;
 }
@@ -25,31 +25,34 @@ exports.validateToken = (token) => { //returns boolean
         if(err){validityStatus=false}
         else{validityStatus=true}
     });
-    return validityStatus=false;
+    return validityStatus;
+}
+
+exports.decodeTeoken = (token) => {
+    return jwt.decode(token, process.env.ACCESS_TOKEN_SECRET)
 }
 
 exports.authStatus = (req) => {
 
-    varbearerHeader = req.headers['authorization'];
+    var bearerHeader = req.headers['authorization'];
     if (typeof bearerHeader != 'undefined') {
         var bearerToken = bearerHeader.split(' ')[1];
         if (this.validateToken(bearerToken)) {
             return true;
         }
-        return false;
     }
     return false;    
 }
 
 exports.authMiddleware = (req, res, next) => {
-    
+    // console.log(req.header('authorization').split(' ')[1]);
     if(this.authStatus(req)){
-        console.log("middleware");
+        console.log(" auth middleware - authenticated");
+        req.user = this.decodeTeoken(req.header('authorization').split(' ')[1]);
         next();
     }else{
-        console.log("middleware");
-        // throw "Invalid User ID";
-        res.redirect('/auth/login');
+        console.log("auth middleware - not authenticated");
+        throw "Invalid User ID";
         return;
     }
 }
