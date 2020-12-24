@@ -53,7 +53,7 @@ AuthRouter.route('/login')
                     res.json(authResponse);
                 } else {
                     var jwtToken = opr.createJwtToken({mobile: user.mobile, name: user.name});
-                    res.cookie("token", jwtToken); //Change storage to local-storage at frontend
+                    //res.cookie("token", jwtToken); //Change storage to local-storage at frontend
                     res.setHeader('Content-Type', 'application/json');
                     authResponse = {
                         user: {
