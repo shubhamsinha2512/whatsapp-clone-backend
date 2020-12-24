@@ -19,6 +19,7 @@
         "name": "XXXXXXXXXXXX",
         "password":"xxxxxxxxxx"
     }
+```
 }
 ### AuthResponse Object Structure
 
