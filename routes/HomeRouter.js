@@ -1,24 +1,24 @@
 const HomeRouter = require('express').Router();
-const passport = require('passport');
+const opr = require('../operations');
 
 HomeRouter.route('/')
 .get((req, res)=>{
-    // res.send("Get at Home");
-    console.log("home", req.signedCookies);
-    if(req.signedCookies){
+    console.log("Get at Home");
+    if(opr.authStatus(req)){
         res.setHeader('Content-Type', 'application/json');
         res.json({
-            loginStatus:true,
-            mobile:req.signedCookies.user
+            authStatus:true,
+            mobile:1234
         });
     }
     else{
         res.setHeader('Content-Type', 'application/json');
         res.json({
-            loginStatus:false,
+            authStatus:false,
             mobile:''
         });
     }
+
 })
 .post((req, res)=>{
     res.send("Post at Home");
